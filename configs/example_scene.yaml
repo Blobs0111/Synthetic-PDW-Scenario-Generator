@@ -15,3 +15,4 @@ emitters:
   - {type: stagger, id: 3, rf_mhz: 6500,  pw_us: 0.50, aoa_deg: 10,  pattern_us: [466, 566]}
   - {type: jitter,  id: 4, rf_mhz: 12200, pw_us: 4.00, aoa_deg: 80,  mean_us: 3000, jitter_us: 500}
   - {type: dwell,   id: 5, rf_mhz: 8000,  pw_us: 50.0, aoa_deg: -30, pris_us: [640, 704, 736], dwell_us: 4400}
+  - {type: stagger, id: 6, rf_mhz: 1000,  pw_us: 0.70, aoa_deg: 30,  pattern_us: [600, 350, 400, 450]}

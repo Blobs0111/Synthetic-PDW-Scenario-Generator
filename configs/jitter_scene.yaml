@@ -1,0 +1,11 @@
+seed: 0
+duration_ms: 80
+out_pdw: jitter_scene_pdw.txt
+out_truth: jitter_scene_truth.txt
+spurious_frac: 0.03
+dropout_frac: 0.01
+
+emitters:
+  - {type: jitter,  id: 1, rf_mhz: 9200, pw_us: 0.40, aoa_deg: 45,  mean_us: 516, jitter_us: 25}
+  - {type: jitter,  id: 2, rf_mhz: 2900, pw_us: 12.00, aoa_deg: -120,  mean_us: 1000, jitter_us: 100}
+  - {type: jitter,  id: 3, rf_mhz: 12200, pw_us: 4.00, aoa_deg: 80,  mean_us: 3000, jitter_us: 500}
