@@ -10,6 +10,7 @@ import numpy as np
 import yaml
 
 from emitters import TYPES
+from pathlib import Path
 from pdw import write_pdw, write_truth
 
 # Create spurious pulses/false alarms to inject
@@ -88,8 +89,16 @@ def main(cfg_path):
     # TODO (core): inject dropouts — randomly delete cfg['dropout_frac'] of the pulses.
     pulses = apply_dropout(pulses, cfg['dropout_frac'], rng)
 
-    write_pdw(cfg.get("out_pdw", "scene_pdw.txt"), pulses)
-    write_truth(cfg.get("out_truth", "scene_truth.txt"), truth)
+    out_pdw = cfg.get("out_pdw", "scene_pdw.txt")
+    out_truth = cfg.get("out_truth", "scene_truth.txt")
+
+    # Create output directories automatically
+    Path(out_pdw).parent.mkdir(parents=True, exist_ok=True)
+    Path(out_truth).parent.mkdir(parents=True, exist_ok=True)
+
+    write_pdw(out_pdw, pulses)
+    write_truth(out_truth, truth)
+
     print(f"wrote {len(pulses)} pulses from {len(emitters)} emitters "
           f"-> {cfg.get('out_pdw','scene_pdw.txt')}, {cfg.get('out_truth','scene_truth.txt')}")
 

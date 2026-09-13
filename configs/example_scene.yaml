@@ -2,8 +2,8 @@
 # Uncomment the stagger/jitter/dwell emitters once you implement those classes in emitters.py.
 seed: 0
 duration_ms: 80
-out_pdw: scene_pdw.txt
-out_truth: scene_truth.txt
+out_pdw: outputs/example_scene/example_scene_pdw.txt
+out_truth: outputs/example_scene/example_scene_truth.txt
 spurious_frac: 0.05      # used once you implement spurious injection (generate.py TODO)
 dropout_frac: 0.02       # used once you implement dropout injection
 

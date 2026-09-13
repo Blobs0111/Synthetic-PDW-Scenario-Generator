@@ -1,7 +1,7 @@
 seed: 0
 duration_ms: 80
-out_pdw: jitter_scene_pdw.txt
-out_truth: jitter_scene_truth.txt
+out_pdw: outputs/jitter_scene/jitter_scene_pdw.txt
+out_truth: outputs/jitter_scene/jitter_scene_truth.txt
 spurious_frac: 0.03
 dropout_frac: 0.01
 

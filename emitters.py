@@ -11,11 +11,12 @@ import numpy as np
 
 class Emitter:
     def __init__(self, id, rf_mhz, pw_us, aoa_deg,
-                 rf_jit=0.5, pw_jit=0.02, aoa_jit=5.0):
+                 rf_jit=0.5, pw_jit=0.02, aoa_jit=5.0, aoa_rate_deg_per_s = 0.0):
         self.id = id
         self.rf = rf_mhz
         self.pw = pw_us
         self.aoa = aoa_deg
+        self.aoa_rate = aoa_rate_deg_per_s
         self.rf_jit = rf_jit
         self.pw_jit = pw_jit
         self.aoa_jit = aoa_jit
@@ -26,10 +27,12 @@ class Emitter:
     def pulses(self, t_end_us, rng):
         """Return (N,5) [toa_us, rf_mhz, aoa_deg, pw_us, emitter_id]."""
         t = np.asarray(self.toas(t_end_us, rng), dtype=float)
+        t_sec = t * 1e-6
         n = len(t)
         rf = self.rf + rng.normal(0, self.rf_jit, n)
         pw = self.pw + rng.normal(0, self.pw_jit, n)
-        aoa = self.aoa + rng.normal(0, self.aoa_jit, n)
+        aoa_true = self.aoa + self.aoa_rate * t_sec
+        aoa = aoa_true + rng.normal(0, self.aoa_jit, n)
         return np.column_stack([t, rf, aoa, pw, np.full(n, self.id)])
 
 

@@ -1,12 +1,12 @@
 seed: 0
-duration_ms: 80
-out_pdw: outputs/mixed_scene/mixed_scene_pdw.txt
-out_truth: outputs/mixed_scene/mixed_scene_truth.txt
+duration_ms: 100
+out_pdw: outputs/demo_scene/demo_scene_pdw.txt
+out_truth: outputs/demo_scene/demo_scene_truth.txt
 spurious_frac: 0.05
-dropout_frac: 0.05
+dropout_frac: 0.5
 
 emitters:
-  - {type: fixed, id: 1, rf_mhz: 9200,  pw_us: 0.40, aoa_deg: 45,   pri_us: 516}
+  - {type: fixed, id: 1, rf_mhz: 9200,  pw_us: 0.40, aoa_deg: 45, aoa_rate_deg_per_s: 30, pri_us: 516}
   - {type: stagger, id: 2, rf_mhz: 6500,  pw_us: 0.50, aoa_deg: 10,  pattern_us: [466, 566]}
   - {type: jitter,  id: 3, rf_mhz: 12200, pw_us: 4.00, aoa_deg: 80,  mean_us: 3000, jitter_us: 500}
   - {type: dwell,   id: 4, rf_mhz: 8000,  pw_us: 50.0, aoa_deg: -30, pris_us: [640, 704, 736], dwell_us: 4400}

@@ -1,7 +1,7 @@
 seed: 0
 duration_ms: 80
-out_pdw: stagger_scene_pdw.txt
-out_truth: stagger_scene_truth.txt
+out_pdw: outputs/stagger_scene/stagger_scene_pdw.txt
+out_truth: outputs/stagger_scene/stagger_scene_truth.txt
 spurious_frac: 0.01
 dropout_frac: 0.02
 

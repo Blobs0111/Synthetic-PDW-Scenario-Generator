@@ -1,7 +1,7 @@
 seed: 0
 duration_ms: 80
-out_pdw: fixed_scene_pdw.txt
-out_truth: fixed_scene_truth.txt
+out_pdw: outputs/fixed_scene/fixed_scene_pdw.txt
+out_truth: outputs/fixed_scene/fixed_scene_truth.txt
 spurious_frac: 0.05
 dropout_frac: 0.02
 

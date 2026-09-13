@@ -1,7 +1,7 @@
 seed: 0
 duration_ms: 80
-out_pdw: dwell_scene_pdw.txt
-out_truth: dwell_scene_truth.txt
+out_pdw: outputs/dwell_scene/dwell_scene_pdw.txt
+out_truth: outputs/dwell_scene/dwell_scene_truth.txt
 spurious_frac: 0.05
 dropout_frac: 0.02
 

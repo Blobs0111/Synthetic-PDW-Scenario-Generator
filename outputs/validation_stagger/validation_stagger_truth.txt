@@ -1,0 +1,2 @@
+id rf_mhz pri_us pw_us aoa_deg type
+1 9200.0 425.00 0.400 45.00 stagger
