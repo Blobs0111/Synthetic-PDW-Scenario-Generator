@@ -1,4 +1,4 @@
-# Project 1 — Synthetic PDW Scenario Generator
+# Synthetic PDW Scenario Generator
 
 Generate synthetic radar pulse streams (PDWs) and matching ground-truth data from configurable radar emitter scenarios. The generator supports multiple PRI behaviors, measurement noise, spurious pulse injection, and pulse dropouts for testing and validation of radar pulse processing algorithms.
 
@@ -38,6 +38,19 @@ Each run generates:
 
 Output filenames are specified within each configuration file.
 
+### Validation Scenarios
+
+Dedicated validation configurations are provided for verifying individual PRI implementations:
+
+```bash
+python generate.py configs/validation_fixed.yaml
+python generate.py configs/validation_stagger.yaml
+python generate.py configs/validation_jitter.yaml
+python generate.py configs/validation_dwell.yaml
+```
+
+These scenarios contain a single emitter with corruption effects disabled, making them useful for validating expected PRI behavior through analysis plots.
+
 ---
 
 ## Scenario Configuration
@@ -67,18 +80,57 @@ emitters:
 - `jitter` — Gaussian-distributed PRI variation
 - `dwell` — Block-based PRI switching
 
-### Included Configurations
+---
+
+## Included Configurations
 
 | Configuration | Description |
 |--------------|-------------|
-| `example_scene.yaml` | Example scenario containing multiple PRI types and corruption effects |
-| `fixed_scene.yaml` | Fixed PRI emitters only |
-| `stagger_scene.yaml` | Stagger PRI emitters only |
-| `jitter_scene.yaml` | Jitter PRI emitters only |
-| `dwell_scene.yaml` | Dwell-switched PRI emitters only |
+| `example_scene.yaml` | Original example scenario |
+| `fixed_scene.yaml` | Multiple Fixed PRI emitters |
+| `stagger_scene.yaml` | Multiple Stagger PRI emitters |
+| `jitter_scene.yaml` | Multiple Jitter PRI emitters |
+| `dwell_scene.yaml` | Multiple Dwell PRI emitters |
 | `mixed_scene.yaml` | Combined scenario containing all supported PRI types |
+| `validation_fixed.yaml` | Single-emitter Fixed PRI validation scenario |
+| `validation_stagger.yaml` | Single-emitter Stagger PRI validation scenario |
+| `validation_jitter.yaml` | Single-emitter Jitter PRI validation scenario |
+| `validation_dwell.yaml` | Single-emitter Dwell PRI validation scenario |
 
 New emitters using the existing PRI types can be added by modifying a configuration file without changing source code.
+
+---
+
+## Output Organization
+
+Output files may be written into scenario-specific directories.
+
+Example:
+
+```text
+outputs/
+├── validation_fixed/
+│   ├── validation_fixed_pdw.txt
+│   └── validation_fixed_truth.txt
+│
+├── validation_stagger/
+│   ├── validation_stagger_pdw.txt
+│   └── validation_stagger_truth.txt
+│
+├── validation_jitter/
+│   ├── validation_jitter_pdw.txt
+│   └── validation_jitter_truth.txt
+│
+├── validation_dwell/
+│   ├── validation_dwell_pdw.txt
+│   └── validation_dwell_truth.txt
+│
+└── mixed_scene/
+    ├── mixed_scene_pdw.txt
+    └── mixed_scene_truth.txt
+```
+
+Output locations are defined within each configuration file and are created automatically by the generator if the specified directories do not already exist.
 
 ---
 
@@ -114,6 +166,58 @@ These files are intended for validation and comparison against downstream proces
 
 ---
 
+## Generating Analysis Figures
+
+Analysis plots can be generated directly from any PDW output file.
+
+Example:
+
+```bash
+python plot_scene.py outputs/mixed_scene/mixed_scene_pdw.txt
+```
+
+Generated figures are written to a scenario-specific directory under:
+
+```text
+figures/
+```
+
+Example:
+
+```text
+figures/
+└── mixed_scene/
+    ├── pri_validation.png
+    ├── rf_vs_toa.png
+    ├── aoa_vs_toa.png
+    └── emitter_timeline.png
+```
+
+### Included Visualizations
+
+#### PRI Validation
+
+Interval histograms generated from dedicated validation scenarios are used to verify that each PRI implementation exhibits the expected timing behavior:
+
+- Fixed PRI → Single interval peak
+- Stagger PRI → Multiple repeating interval peaks
+- Jitter PRI → Distribution centered around a mean PRI
+- Dwell PRI → Multiple operating-state interval peaks
+
+#### RF vs TOA
+
+RF-versus-Time-of-Arrival plots visualize pulse interleaving among multiple emitters and provide a representation of the pulse stream that would be observed by an ESM receiver.
+
+#### AoA vs TOA
+
+AoA-versus-Time-of-Arrival visualizations provide insight into emitter bearing characteristics and can be extended to support future moving-emitter modeling.
+
+#### Emitter Timeline
+
+Emitter timelines display pulse arrivals grouped by emitter identifier and can be useful for debugging and scenario verification.
+
+---
+
 ## Implemented Features
 
 - Fixed PRI emitters
@@ -127,6 +231,11 @@ These files are intended for validation and comparison against downstream proces
 - Ground-truth generation
 - Deterministic output through seeded random number generation
 - Unit test coverage for all supported PRI types
+- Validation scenario configurations
+- Automated analysis figure generation
+- PRI validation visualizations
+- RF vs TOA visualization
+- Scenario-specific output directory generation
 
 ---
 
@@ -135,7 +244,9 @@ These files are intended for validation and comparison against downstream proces
 - `emitters.py` — Emitter implementations for Fixed, Stagger, Jitter, and Dwell PRI behaviors.
 - `generate.py` — Scenario generation pipeline, including emitter construction, pulse generation, spurious pulse injection, dropout simulation, and output generation.
 - `pdw.py` — PDW record definitions and file writers. The output column format should not be modified.
-- `configs/` — Example and validation scenario configurations.
+- `plot_scene.py` — Analysis utility for generating validation figures and visualizations from PDW outputs.
+- `configs/` — Example, mixed, and validation scenario configurations.
+- `outputs/` — Generated PDW and ground-truth scenario outputs.
 - `tests/test_emitters.py` — Unit tests validating behavior of all PRI emitter types.
 - `figures/` — Validation and analysis plots generated from scenario outputs.
 
@@ -166,21 +277,39 @@ The tests validate:
 
 ## Figures and Analysis
 
-The repository includes validation figures generated from scenario outputs, including:
+The repository includes analysis and validation plots generated directly from scenario outputs.
 
-- PRI histograms for each PRI type
-- Interleaved RF vs. TOA visualizations
-- Additional analysis plots produced during project validation
+### PRI Validation
 
-These figures can be used to verify expected PRI behavior and visualize multi-emitter interleaved pulse streams.
+Dedicated validation scenarios are used to verify each supported PRI implementation:
+
+- Fixed PRI → Single dominant interval
+- Stagger PRI → Repeating interval pattern
+- Jitter PRI → Distribution around a configured mean
+- Dwell PRI → Multiple operating-state intervals
+
+### RF vs TOA
+
+RF-versus-Time-of-Arrival plots visualize pulse interleaving among multiple emitters and provide a realistic representation of the data an ESM receiver would observe.
+
+### Additional Analysis
+
+Additional visualizations include:
+
+- AoA vs TOA plots
+- Emitter timeline plots
+- Validation figures generated from dedicated PRI test scenarios
+
+These figures are useful for verifying generator behavior, validating PRI implementations, and visualizing multi-emitter radar environments.
 
 ---
 
-## Stretch Goals
+## Future Enhancements
 
-Potential future enhancements include:
+Potential future improvements include:
 
-- Moving emitters (AoA changes over time)
+- Moving emitters through changing AoA over time
 - Scan-modulated amplitude
 - Frequency-agile RF
-- Reusable emitter-template library
+- Reusable emitter-template libraries
+- Enhanced emitter motion and trajectory modeling
